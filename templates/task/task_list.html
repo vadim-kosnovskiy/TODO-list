@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <div class="pcoded-content">
+    <div class="card">
+      <div class="card-body table-border-style">
+        <h2>
+          TODO list
+          <a href="{% url 'task:task-add' %}" class="btn btn-primary link-to-page">
+            Add task
+          </a>
+        </h2>
+        <br>
+        {% if task_list %}
+          <table class="table table-hover">
+            {% for task in task_list %}
+              <tr><strong>{{ task.content }}</strong>
+                {% if task.is_done %}
+                  <span style="color: green; font-weight: bold">  Done</span>
+                {% else %}
+                  <span style="color: red; font-weight: bold">  Not done</span>
+                {% endif %}
+                {% if task.is_done %}
+                  <a href="{% url "task:toggle-task-done" pk=task.id %}" class="btn btn-secondary link-to-page">
+                    Undo
+                  </a>
+                {% else %}
+                  <a href="{% url "task:toggle-task-done" pk=task.id %}" class="btn btn-success link-to-page">
+                    Complete
+                  </a>
+              {% endif %}
+              </tr><br>
+              <tr>
+                <span style="font-size: 12px">Created: {{ task.datetime }} </span>
+                {% if task.deadline %}
+                  <span style="font-size: 12px; color: darkviolet"> Deadline: {{ task.deadline }}</span>
+                {% endif %}
+              </tr><br>
+              <tr>
+                <span style="color: gray">Tags:
+                {% for tag in task.tags.all %}
+                  {{ tag.name }}
+                {% endfor %}
+                </span>
+              </tr>
+                <a href="{% url 'task:task-update' pk=task.id %}"> Update </a>
+                <a href="{% url 'task:task-delete' pk=task.id %}"> Delete </a>
+              <hr>
+            {% endfor %}
+          </table>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+{% endblock %}
